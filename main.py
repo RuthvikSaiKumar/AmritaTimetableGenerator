@@ -65,9 +65,8 @@ class Slot:
         self.day = day
         self.slot = slot
 
-        if self.class_type == ClassType.LAB:
-            if self.slot not in [0, 3, 5]:
-                raise ValueError('Invalid slot for lab')
+        if self.class_type == ClassType.LAB and self.slot not in [0, 3, 5]:
+            raise ValueError('Invalid slot for lab')
 
     def __repr__(self):
         return f'Day={self.day} Slot={self.slot}'
@@ -91,9 +90,7 @@ class TimeTable:
             if slot.slot == 0:
                 self.schedule[slot.day][slot.slot + 1] = subject
                 self.schedule[slot.day][slot.slot + 2] = subject
-            elif slot.slot == 3:
-                self.schedule[slot.day][slot.slot + 1] = subject
-            elif slot.slot == 5:
+            elif slot.slot in [3, 5]:
                 self.schedule[slot.day][slot.slot + 1] = subject
 
 
@@ -116,8 +113,7 @@ class Solver:
         for subject_code, number_of_classes in self.classes.items():
             theory = number_of_classes['theory']
 
-            for i in range(theory):
-
+            for _ in range(theory):
                 s = Slot(ClassType.THEORY, current_day, current_slot)
                 self.timetable.add_class(Subject(subject_code, 'professor_code'), s)
 
@@ -130,8 +126,7 @@ class Solver:
         for subject_code, number_of_classes in self.classes.items():
             lab = number_of_classes['lab']
 
-            for i in range(lab):
-
+            for _ in range(lab):
                 s = Slot(ClassType.LAB, current_day, current_slot)
                 self.timetable.add_class(Subject(subject_code, 'professor_code'), s)
 
